@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yoggie Trip</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500&family=Caveat:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="preload" as="image" href="scroll-01.JPG">
+  <link rel="preload" as="image" href="scroll-02.JPG">
+  <link rel="preload" as="image" href="scroll-03.JPG">
+  <link rel="preload" as="image" href="Scroll-04.JPG">
+  <link rel="preload" as="image" href="scroll-05.JPG">
+  <link rel="preload" as="image" href="hero-evane.JPG">
+  <link rel="preload" as="image" href="hero-bell.jpg">
+  <link rel="preload" as="image" href="hero-elissa.jpg">
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-deep: #1a1a2e;
+      --bg-dark: #16213e;
+      --bg-card: #0f3460;
+      --accent-warm: #e2725b;
+      --accent-gold: #d4a574;
+      --text-primary: #f0ece2;
+      --text-muted: #a8a0b0;
+      --text-dim: #6e6a78;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ── INBOX BUTTON ── */
+    .inbox-btn {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      z-index: 1000;
+      width: 52px;
+      height: 52px;
+      background: rgba(15, 52, 96, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(212, 165, 116, 0.3);
+      border-radius: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      animation: gentle-pulse 3s ease-in-out infinite;
+    }
+
+    .inbox-btn:hover {
+      background: rgba(15, 52, 96, 0.95);
+      border-color: var(--accent-gold);
+      transform: scale(1.08);
+    }
+
+    @keyframes gentle-pulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(212, 165, 116, 0.2);
+      }
+
+      50% {
+        box-shadow: 0 0 20px 4px rgba(212, 165, 116, 0.15);
+      }
+    }
+
+    .inbox-btn svg {
+      width: 26px;
+      height: 26px;
+    }
+
+    .inbox-btn.spotlight {
+      animation: spotlight-pulse 1.4s ease-in-out infinite;
+      border-color: var(--accent-gold);
+    }
+
+    @keyframes spotlight-pulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(212, 165, 116, 0.35);
+        transform: scale(1);
+      }
+
+      50% {
+        box-shadow: 0 0 28px 8px rgba(212, 165, 116, 0.45);
+        transform: scale(1.12);
+      }
+    }
+
+    /* ── INTRO (hero + carousel merged, scroll-crossfaded) ── */
+    .intro {
+      height: 340vh;
+      position: relative;
+    }
+
+    .intro-sticky {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(170deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%);
+    }
+
+    .intro-sticky::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 600px 400px at 20% 80%, rgba(226, 114, 91, 0.08), transparent),
+        radial-gradient(ellipse 500px 500px at 80% 20%, rgba(212, 165, 116, 0.06), transparent);
+    }
+
+    .hero-content {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 24px;
+      will-change: opacity, transform;
+    }
+
+    .hero-content h1 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: clamp(3rem, 8vw, 6rem);
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      padding-bottom: 0.1em;
+      background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-gold) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-content .dates {
+      margin-top: 16px;
+      font-size: clamp(0.85rem, 2vw, 1.05rem);
+      color: var(--text-muted);
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .hero-content .tagline {
+      margin-top: 10px;
+      font-family: 'Caveat', cursive;
+      font-size: clamp(1.2rem, 3vw, 1.6rem);
+      color: var(--accent-gold);
+      opacity: 0.8;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 36px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-dim);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      animation: float 2s ease-in-out infinite;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(8px);
+      }
+    }
+
+    .scroll-hint svg {
+      width: 18px;
+      height: 18px;
+      opacity: 0.5;
+    }
+
+    /* ── SHADOW PUPPETS (flank the hero, hop off-screen on scroll) ── */
+    .puppet {
+      position: absolute;
+      bottom: 0;
+      width: clamp(210px, 32vw, 440px);
+      aspect-ratio: 1000 / 1414;
+      background-image: url('shadow-puppets.png');
+      background-repeat: no-repeat;
+      background-size: 200% 100%;
+      filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.5));
+      pointer-events: none;
+      will-change: transform, opacity;
+    }
+
+    .puppet-left {
+      left: clamp(-10px, 1vw, 24px);
+      background-position: left top;
+    }
+
+    .puppet-right {
+      right: clamp(-10px, 1vw, 24px);
+      background-position: right top;
+    }
+
+    /* ── RECORD BROWSER (carousel, crossfades in over the hero) ── */
+    .carousel-wrap {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 24px;
+      will-change: opacity, transform;
+    }
+
+    .carousel-wrap h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.4rem, 3vw, 1.8rem);
+      color: var(--text-dim);
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      margin-bottom: 50px;
+      text-transform: uppercase;
+    }
+
+    .coverflow {
+      position: relative;
+      width: 100%;
+      height: 420px;
+      perspective: 1200px;
+      overflow: hidden;
+      cursor: grab;
+      user-select: none;
+    }
+
+    .coverflow:active {
+      cursor: grabbing;
+    }
+
+    .coverflow-track {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+      will-change: transform;
+    }
+
+    .record {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      top: 50%;
+      left: -150px;
+      margin-top: -150px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+      transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1),
+        opacity 0.5s ease,
+        box-shadow 0.5s ease;
+      will-change: transform, opacity;
+      backface-visibility: hidden;
+    }
+
+    .record img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(0.85) contrast(1.05);
+      display: block;
+    }
+
+    .record .vinyl-label {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 16px 18px;
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
+      font-family: 'Caveat', cursive;
+      font-size: 1.2rem;
+      color: rgba(255, 255, 255, 0.9);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+
+    .record.active .vinyl-label {
+      opacity: 1;
+    }
+
+    .record::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 2px solid rgba(255, 255, 255, 0);
+      border-radius: 12px;
+      transition: border-color 0.4s;
+      pointer-events: none;
+    }
+
+    .record.active::after {
+      border-color: rgba(212, 165, 116, 0.4);
+    }
+
+    /* Dots indicators */
+    .record-dots {
+      display: flex;
+      gap: 10px;
+      margin-top: 40px;
+      align-items: center;
+    }
+
+    .record-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text-dim);
+      opacity: 0.3;
+      transition: all 0.4s ease;
+      cursor: pointer;
+    }
+
+    .record-dot.active {
+      width: 28px;
+      border-radius: 4px;
+      background: var(--accent-gold);
+      opacity: 1;
+    }
+
+    /* Navigation arrows */
+    .coverflow-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(15, 52, 96, 0.5);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(212, 165, 116, 0.2);
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      z-index: 10;
+    }
+
+    .coverflow-nav:hover {
+      background: rgba(15, 52, 96, 0.8);
+      border-color: var(--accent-gold);
+    }
+
+    .coverflow-nav.prev {
+      left: max(16px, calc(50% - 260px));
+    }
+
+    .coverflow-nav.next {
+      right: max(16px, calc(50% - 260px));
+    }
+
+    .coverflow-nav svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* ── CLOSING ── */
+    .closing {
+      height: 50vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg, #0d0d1a 0%, var(--bg-deep) 100%);
+    }
+
+    .closing h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 400;
+      color: var(--accent-gold);
+      text-align: center;
+    }
+
+    .closing p {
+      margin-top: 12px;
+      font-family: 'Caveat', cursive;
+      font-size: 1.3rem;
+      color: var(--text-dim);
+    }
+
+    /* ── MAILBOX NOTIFICATION DOT ── */
+    .inbox-badge {
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      width: 14px;
+      height: 14px;
+      background: #e5484d;
+      border: 2px solid var(--bg-deep);
+      border-radius: 50%;
+      opacity: 0;
+      transform: scale(0.5);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .inbox-badge.visible {
+      opacity: 1;
+      transform: scale(1);
+      animation: badge-blink 1.1s ease-in-out infinite;
+    }
+
+    @keyframes badge-blink {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.25;
+      }
+    }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 10, 20, 0.88);
+      backdrop-filter: blur(16px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal {
+      background: linear-gradient(180deg, #1e1b30 0%, #16213e 100%);
+      border: 1px solid rgba(212, 165, 116, 0.2);
+      border-radius: 20px;
+      width: min(520px, 92vw);
+      max-height: 85vh;
+      overflow: hidden;
+      transform: scale(0.9) translateY(20px);
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+    }
+
+    .modal-overlay.open .modal {
+      transform: scale(1) translateY(0);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 36px;
+      height: 36px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-size: 1.2rem;
+      transition: all 0.2s;
+      z-index: 10;
+    }
+
+    .modal-close:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-primary);
+    }
+
+    .modal-header {
+      padding: 28px 28px 0;
+      text-align: center;
+    }
+
+    .modal-header h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      color: var(--accent-gold);
+      font-weight: 400;
+    }
+
+    .modal-header p {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      margin-top: 6px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 0;
+      margin: 24px 28px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 12px 8px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.3s;
+    }
+
+    .tab-btn.active {
+      color: var(--accent-gold);
+      border-bottom-color: var(--accent-gold);
+    }
+
+    .tab-btn:hover {
+      color: var(--text-primary);
+    }
+
+    .tab-content {
+      padding: 0 28px 28px;
+      max-height: 55vh;
+      overflow-y: auto;
+    }
+
+    .tab-content::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .tab-content::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .tab-content::-webkit-scrollbar-thumb {
+      background: rgba(212, 165, 116, 0.3);
+      border-radius: 2px;
+    }
+
+    .tab-pane {
+      display: none;
+    }
+
+    .tab-pane.active {
+      display: block;
+    }
+
+    .friend-hero {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      object-position: center 50%;
+      border-radius: 12px;
+      margin: 20px 0 16px;
+      filter: saturate(0.85) contrast(1.05);
+    }
+
+    .friend-hero.face-shift {
+      object-position: center 25%;
+    }
+
+    .friend-hero.face-shift-more {
+      object-position: center 40%;
+    }
+
+    .lock-screen {
+      text-align: center;
+      padding: 20px 0 0;
+    }
+
+    .lock-screen svg {
+      width: 40px;
+      height: 40px;
+      color: var(--text-dim);
+      margin-bottom: 12px;
+    }
+
+    .lock-screen p {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-bottom: 16px;
+    }
+
+    .lock-btn {
+      padding: 10px 28px;
+      background: linear-gradient(135deg, var(--accent-warm), var(--accent-gold));
+      border: none;
+      border-radius: 8px;
+      color: var(--bg-deep);
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .lock-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(226, 114, 91, 0.3);
+    }
+
+    .password-form {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .password-form.visible {
+      display: flex;
+    }
+
+    .password-input {
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(212, 165, 116, 0.25);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      width: 160px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .password-input:focus {
+      border-color: var(--accent-gold);
+    }
+
+    .password-submit {
+      padding: 10px 20px;
+      background: linear-gradient(135deg, var(--accent-warm), var(--accent-gold));
+      border: none;
+      border-radius: 8px;
+      color: var(--bg-deep);
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .password-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(226, 114, 91, 0.3);
+    }
+
+    .password-error {
+      width: 100%;
+      text-align: center;
+      color: var(--accent-warm);
+      font-size: 0.78rem;
+      margin-top: 8px;
+      min-height: 1em;
+    }
+
+    .note-content {
+      display: none;
+    }
+
+    .note-content.unlocked {
+      display: block;
+    }
+
+    .note-content p {
+      font-family: 'Caveat', cursive;
+      font-size: 1.25rem;
+      line-height: 1.7;
+      color: var(--text-primary);
+      margin-bottom: 14px;
+    }
+
+    .note-content .sign-off {
+      font-family: 'Caveat', cursive;
+      font-size: 1.15rem;
+      color: var(--accent-gold);
+      margin-top: 20px;
+      text-align: right;
+    }
+
+    @media (max-width: 600px) {
+      .inbox-btn {
+        top: 16px;
+        right: 16px;
+        width: 44px;
+        height: 44px;
+      }
+
+      .inbox-btn svg {
+        width: 22px;
+        height: 22px;
+      }
+
+      .puppet {
+        width: clamp(140px, 45vw, 200px);
+      }
+
+      .record {
+        width: 240px;
+        height: 240px;
+        left: -120px;
+        margin-top: -120px;
+      }
+
+      .coverflow {
+        height: 340px;
+      }
+
+      .coverflow-nav.prev {
+        left: 8px;
+      }
+
+      .coverflow-nav.next {
+        right: 8px;
+      }
+
+      .friend-hero {
+        height: 150px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- INBOX BUTTON -->
+  <button class="inbox-btn" onclick="openModal()" aria-label="Open messages">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#d4a574" stroke-width="1.5" stroke-linecap="round"
+      stroke-linejoin="round">
+      <path d="M21 8v8a3 3 0 01-3 3H6a3 3 0 01-3-3V8" />
+      <path d="M1 8l10 6a2 2 0 002 0l10-6" />
+      <rect x="1" y="4" width="22" height="16" rx="3" />
+    </svg>
+    <span class="inbox-badge" id="inboxBadge" aria-hidden="true"></span>
+  </button>
+
+  <!-- INTRO: hero text crossfades into the carousel as you scroll -->
+  <section class="intro">
+    <div class="intro-sticky">
+      <div class="hero-content" id="heroContent">
+        <h1>Yoggie Trip</h1>
+        <div class="dates">12 July &mdash; 20 July 2026</div>
+        <div class="tagline">#fourjeebers</div>
+        <div class="scroll-hint">
+          <span>Scroll</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 5v14M19 12l-7 7-7-7" />
+          </svg>
+        </div>
+      </div>
+
+      <div class="puppet puppet-left" id="puppetLeft" aria-hidden="true"></div>
+      <div class="puppet puppet-right" id="puppetRight" aria-hidden="true"></div>
+
+      <div class="carousel-wrap" id="carouselWrap">
+        <h2>The Collection</h2>
+
+        <div class="coverflow" id="coverflow">
+          <div class="coverflow-track" id="coverflowTrack">
+            <div class="record" data-index="0">
+              <img src="scroll-01.JPG" alt="Day one crew selfie">
+              <div class="vinyl-label">the viewpoint</div>
+            </div>
+            <div class="record" data-index="1">
+              <img src="scroll-02.JPG" alt="Cake moment">
+              <div class="vinyl-label">the surprise</div>
+            </div>
+            <div class="record" data-index="2">
+              <img src="scroll-03.JPG" alt="Gold frame">
+              <div class="vinyl-label">late nights</div>
+            </div>
+            <div class="record" data-index="3">
+              <img src="Scroll-04.JPG" alt="Mirror selfie at ROKA">
+              <div class="vinyl-label">roka days</div>
+            </div>
+            <div class="record" data-index="4">
+              <img src="scroll-05.JPG" alt="Round mirror crew">
+              <div class="vinyl-label">reflections</div>
+            </div>
+            <div class="record" data-index="5">
+              <img src="hero-evane.JPG" alt="Evane at sunset">
+              <div class="vinyl-label">golden hour &mdash; evane</div>
+            </div>
+            <div class="record" data-index="6">
+              <img src="hero-bell.jpg" alt="Bell with owls">
+              <div class="vinyl-label">curious eyes &mdash; bell</div>
+            </div>
+            <div class="record" data-index="7">
+              <img src="hero-elissa.jpg" alt="Elissa at sunset beach">
+              <div class="vinyl-label">peace sign &mdash; elissa</div>
+            </div>
+          </div>
+
+          <button class="coverflow-nav prev" onclick="goTo(currentIndex - 1)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </button>
+          <button class="coverflow-nav next" onclick="goTo(currentIndex + 1)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 18l6-6-6-6" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="record-dots" id="recordDots"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLOSING -->
+  <section class="closing">
+    <h2>Check your mail.</h2>
+    <p>there's something in the inbox for you &uarr;</p>
+  </section>
+
+  <!-- MODAL -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+      <div class="modal-header">
+        <h3>Letters for You</h3>
+        <p>Each note is sealed &mdash; enter the password to read</p>
+      </div>
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('evane', this)">Evane</button>
+        <button class="tab-btn" onclick="switchTab('elissa', this)">Elissa</button>
+        <button class="tab-btn" onclick="switchTab('bell', this)">Bell</button>
+      </div>
+      <div class="tab-content">
+
+        <!-- EVANE -->
+        <div class="tab-pane active" id="tab-evane">
+          <img class="friend-hero" src="hero-evane.JPG" alt="Evane">
+          <div class="lock-screen" id="lock-evane">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="11" width="18" height="11" rx="2" />
+              <path d="M7 11V7a5 5 0 0110 0v4" />
+            </svg>
+            <p>This note is for Evane's eyes only.</p>
+            <button class="lock-btn" id="lock-btn-evane" onclick="showPasswordForm('evane')">Enter Password</button>
+            <form class="password-form" id="password-form-evane" onsubmit="return submitPassword(event, 'evane')">
+              <input type="password" class="password-input" id="password-input-evane" placeholder="Password"
+                autocomplete="off">
+              <button type="submit" class="password-submit">Unlock</button>
+              <div class="password-error" id="password-error-evane"></div>
+            </form>
+          </div>
+          <div class="note-content" id="note-evane">
+            <p>Yo Evane, where do I even begin? You know, I glaze you a lot but it's actually not glaze. I know you
+              haven't had the easiest childhood and you led a life of sin, heavy sin, and the fact that there is almost
+              no semblance of that past that you exhibit in your behaviour today is very encouraging. I truly respect
+              the discipline that you have to journey with God and spending those nine days with you has definitely
+              encouraged me to do the same. Do not get me wrong, I still slip up a lot of times but now I'm more
+              conscious of what to do… to emulate a bit of you in terms of your quiet time and things like that.</p>
+            <p>But other than the spiritual stuff, (which of course you have emphasized, is the most important), you
+              have been a great friend. Thank you for always being there for me and meeting me where I am. You have been
+              so so important in my university life and like you said classes wouldn't be the same without you without
+              the banter, the inside jokes and the laughs. I know I am not an easy person and the growth you see today
+              is definitely something that you contributed to. I wish you all the best and continuous renewal of
+              strength from God as you embark to do his work and continue to stay strong in the faith.</p>
+            <div class="sign-off">Lots of admiration and gratitude,<br>Justin</div>
+          </div>
+        </div>
+
+        <!-- ELISSA -->
+        <div class="tab-pane" id="tab-elissa">
+          <img class="friend-hero face-shift-more" src="hero-elissa.jpg" alt="Elissa">
+          <div class="lock-screen" id="lock-elissa">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="11" width="18" height="11" rx="2" />
+              <path d="M7 11V7a5 5 0 0110 0v4" />
+            </svg>
+            <p>This note is for Elissa's eyes only.</p>
+            <button class="lock-btn" id="lock-btn-elissa" onclick="showPasswordForm('elissa')">Enter Password</button>
+            <form class="password-form" id="password-form-elissa" onsubmit="return submitPassword(event, 'elissa')">
+              <input type="password" class="password-input" id="password-input-elissa" placeholder="Password"
+                autocomplete="off">
+              <button type="submit" class="password-submit">Unlock</button>
+              <div class="password-error" id="password-error-elissa"></div>
+            </form>
+          </div>
+          <div class="note-content" id="note-elissa">
+            <p>Hello, Elissa. You are one of, or in fact, the most strong woman I know. I'm not talking about physical
+              strength here but your tenacity, especially when you set your mind to do something is very amazing. I just
+              thank God that you are so fervent for him and your skills put to very good use to help the kingdom of God.
+            </p>
+            <p>Thank you for being so honest and opening up during the trip and I pray that God gives you the strength
+              and the peace to move on from that incident. I'm no stranger to incidents in terms of changing my
+              perspective on what is right and biblical but I just wanted to encourage you that God will show you grace
+              and he will make all things right.</p>
+            <p>Thank you for always being that person I spar with and now that we're meeting last I'll definitely miss
+              those moments. You have been an integral part of my university life. Let's just put it that way.</p>
+            <p>In whatever you do, I wish that God will guide your path and give you the strength that you need.</p>
+            <div class="sign-off">Stop being so sneaky,<br>Justin</div>
+          </div>
+        </div>
+
+        <!-- BELL -->
+        <div class="tab-pane" id="tab-bell">
+          <img class="friend-hero face-shift" src="hero-bell.jpg" alt="Bell">
+          <div class="lock-screen" id="lock-bell">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="11" width="18" height="11" rx="2" />
+              <path d="M7 11V7a5 5 0 0110 0v4" />
+            </svg>
+            <p>This note is for Bell's eyes only.</p>
+            <button class="lock-btn" id="lock-btn-bell" onclick="showPasswordForm('bell')">Enter Password</button>
+            <form class="password-form" id="password-form-bell" onsubmit="return submitPassword(event, 'bell')">
+              <input type="password" class="password-input" id="password-input-bell" placeholder="Password"
+                autocomplete="off">
+              <button type="submit" class="password-submit">Unlock</button>
+              <div class="password-error" id="password-error-bell"></div>
+            </form>
+          </div>
+          <div class="note-content" id="note-bell">
+            <p>Hello Belle, I am thankful for your spontaneity when it came to hanging out with E Square and I during
+              this trip. I'm also thankful that you were willing to change your perceptions on me and not judge so fast.
+              In response to your note, no, I'm not gonna just cut you out and yeah, we'll be friends for as long as you
+              want.</p>
+            <p>Jokes aside, it has been a really fun nine days with you and I apologize if I was too annoying. I just
+              wanted to say that you are a really amazing person and God knows what you go through and what you carry
+              with you. I admire your resilience and your hasa ethic. Well, please don't push yourself too hard, ok?</p>
+            <p>Well, I wish that God grants the desires of your heart and He blesses everything you do. And I just
+              wanted to let you know that you don't have to carry everything yourself and you have a heavenly Father who
+              is there for you.</p>
+            <p>See you around Belle and I hope you get the internship with JP Morgan HAHA.</p>
+            <div class="sign-off">Stay cat-like,<br>Justin</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ── HERO BOUNCE-OUT / CAROUSEL FADE-IN ON SCROLL ── */
+    const heroContent = document.getElementById('heroContent');
+    const carouselWrap = document.getElementById('carouselWrap');
+    const puppetLeft = document.getElementById('puppetLeft');
+    const puppetRight = document.getElementById('puppetRight');
+
+    function easeOutBack(t) {
+      const c1 = 1.70158, c3 = c1 + 1;
+      return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
+    }
+
+    const CROSSFADE_DISTANCE = window.innerHeight * 0.9;
+
+    function updateIntroCrossfade() {
+      const scrollY = window.scrollY;
+      const progress = Math.max(0, Math.min(scrollY / CROSSFADE_DISTANCE, 1));
+      const bounce = easeOutBack(progress);
+
+      heroContent.style.opacity = 1 - progress;
+      heroContent.style.transform = `translateY(${-bounce * 120}px) scale(${1 + bounce * 0.1})`;
+      heroContent.style.pointerEvents = progress > 0.85 ? 'none' : 'auto';
+
+      carouselWrap.style.opacity = progress;
+      carouselWrap.style.transform = `scale(${0.9 + progress * 0.1})`;
+      carouselWrap.style.pointerEvents = progress > 0.5 ? 'auto' : 'none';
+
+      const hopBounce = Math.abs(Math.sin(progress * Math.PI * 2.5)) * (1 - progress) * 40;
+      const exitX = progress * 220;
+      puppetLeft.style.transform = `translate(${-exitX}px, ${-hopBounce}px)`;
+      puppetRight.style.transform = `translate(${exitX}px, ${-hopBounce}px)`;
+      puppetLeft.style.opacity = 1 - progress;
+      puppetRight.style.opacity = 1 - progress;
+    }
+    window.addEventListener('scroll', updateIntroCrossfade, { passive: true });
+    updateIntroCrossfade();
+
+    /* ── MAILBOX NOTIFICATION DOT + INBOX SPOTLIGHT ── */
+    const closingSection = document.querySelector('.closing');
+    const inboxBadge = document.getElementById('inboxBadge');
+    const inboxBtn = document.querySelector('.inbox-btn');
+    const closingObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        inboxBadge.classList.toggle('visible', entry.isIntersecting);
+        inboxBtn.classList.toggle('spotlight', entry.isIntersecting);
+      });
+    }, { threshold: 0.3 });
+    closingObserver.observe(closingSection);
+
+    /* ── COVERFLOW CAROUSEL ── */
+    const records = document.querySelectorAll('.record');
+    const track = document.getElementById('coverflowTrack');
+    const dotsContainer = document.getElementById('recordDots');
+    const totalRecords = records.length;
+    let currentIndex = Math.floor(totalRecords / 2);
+    const CARD_W = window.innerWidth <= 600 ? 240 : 300;
+    const SPACING = CARD_W * 0.65;
+
+    // Build dots
+    for (let i = 0; i < totalRecords; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'record-dot' + (i === currentIndex ? ' active' : '');
+      dot.onclick = () => goTo(i);
+      dotsContainer.appendChild(dot);
+    }
+
+    function goTo(idx) {
+      currentIndex = ((idx % totalRecords) + totalRecords) % totalRecords;
+      updateCoverflow();
+    }
+
+    function updateCoverflow() {
+      records.forEach((rec, i) => {
+        let offset = i - currentIndex;
+        if (offset > totalRecords / 2) offset -= totalRecords;
+        if (offset < -totalRecords / 2) offset += totalRecords;
+        const absOffset = Math.abs(offset);
+
+        // Position
+        const translateX = offset * SPACING;
+        const translateZ = -absOffset * 180;
+        const rotateY = offset > 0 ? -45 : offset < 0 ? 45 : 0;
+        const scale = absOffset === 0 ? 1 : absOffset === 1 ? 0.72 : absOffset === 2 ? 0.45 : 0.2;
+        const opacity = absOffset <= 3 ? (absOffset === 0 ? 1 : absOffset === 1 ? 0.8 : absOffset === 2 ? 0.5 : 0.2) : 0;
+
+        rec.style.transform = `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`;
+        rec.style.opacity = opacity;
+        rec.style.zIndex = totalRecords - absOffset;
+        rec.style.pointerEvents = absOffset === 0 ? 'auto' : 'none';
+
+        if (absOffset === 0) {
+          rec.classList.add('active');
+        } else {
+          rec.classList.remove('active');
+        }
+      });
+
+      // Update dots
+      dotsContainer.querySelectorAll('.record-dot').forEach((d, i) => {
+        d.classList.toggle('active', i === currentIndex);
+      });
+    }
+
+    updateCoverflow();
+
+    // Drag / swipe
+    const coverflow = document.getElementById('coverflow');
+    let isDragging = false, dragStartX = 0, dragDelta = 0;
+
+    coverflow.addEventListener('mousedown', e => {
+      isDragging = true;
+      dragStartX = e.clientX;
+      dragDelta = 0;
+    });
+    coverflow.addEventListener('touchstart', e => {
+      isDragging = true;
+      dragStartX = e.touches[0].clientX;
+      dragDelta = 0;
+    }, { passive: true });
+
+    const onMove = (clientX) => {
+      if (!isDragging) return;
+      dragDelta = clientX - dragStartX;
+    };
+    coverflow.addEventListener('mousemove', e => onMove(e.clientX));
+    coverflow.addEventListener('touchmove', e => onMove(e.touches[0].clientX), { passive: true });
+
+    const onEnd = () => {
+      if (!isDragging) return;
+      isDragging = false;
+      if (Math.abs(dragDelta) > 40) {
+        goTo(currentIndex + (dragDelta < 0 ? 1 : -1));
+      }
+    };
+    coverflow.addEventListener('mouseup', onEnd);
+    coverflow.addEventListener('mouseleave', onEnd);
+    coverflow.addEventListener('touchend', onEnd);
+
+    // Keyboard
+    document.addEventListener('keydown', e => {
+      if (document.getElementById('modalOverlay').classList.contains('open')) return;
+      if (e.key === 'ArrowLeft') goTo(currentIndex - 1);
+      if (e.key === 'ArrowRight') goTo(currentIndex + 1);
+    });
+
+    /* ── MODAL ── */
+    const passwords = { evane: 'evane', elissa: 'elissa', bell: 'bell' };
+
+    function openModal() { document.getElementById('modalOverlay').classList.add('open'); }
+    function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
+    document.getElementById('modalOverlay').addEventListener('click', e => {
+      if (e.target === e.currentTarget) closeModal();
+    });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    function switchTab(name, btn) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + name).classList.add('active');
+    }
+
+    function showPasswordForm(name) {
+      document.getElementById('lock-btn-' + name).style.display = 'none';
+      document.getElementById('password-form-' + name).classList.add('visible');
+      document.getElementById('password-input-' + name).focus();
+    }
+
+    function submitPassword(event, name) {
+      event.preventDefault();
+      const input = document.getElementById('password-input-' + name);
+      const errorEl = document.getElementById('password-error-' + name);
+      const pw = input.value;
+      if (pw && pw.toLowerCase() === passwords[name].toLowerCase()) {
+        document.getElementById('lock-' + name).style.display = 'none';
+        document.getElementById('note-' + name).classList.add('unlocked');
+      } else {
+        errorEl.textContent = 'Wrong password. Try again!';
+        input.value = '';
+        input.focus();
+      }
+      return false;
+    }
+  </script>
+
+</body>
+
+</html>
