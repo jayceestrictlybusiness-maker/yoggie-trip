@@ -1191,6 +1191,7 @@
 
     /* ── DOWNLOAD NOTE AS IMAGE ── */
     const heroImages = { evane: 'hero-evane.JPG', elissa: 'hero-elissa.jpg', bell: 'hero-bell.jpg' };
+    const heroFocusY = { evane: 0.5, elissa: 0.4, bell: 0.25 };
 
     function wrapText(ctx, text, maxWidth) {
       const words = text.split(' ');
@@ -1260,7 +1261,7 @@
 
       const scale = Math.max(W / img.width, PHOTO_H / img.height);
       const sw = W / scale, sh = PHOTO_H / scale;
-      const sx = (img.width - sw) / 2, sy = (img.height - sh) / 2;
+      const sx = (img.width - sw) / 2, sy = (img.height - sh) * heroFocusY[name];
       ctx.drawImage(img, sx, sy, sw, sh, 0, 0, W, PHOTO_H);
 
       const photoGrad = ctx.createLinearGradient(0, PHOTO_H - 100, 0, PHOTO_H);
