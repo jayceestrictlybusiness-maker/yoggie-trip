@@ -727,6 +727,26 @@
       text-align: right;
     }
 
+    .download-btn {
+      display: block;
+      margin: 22px 0 4px auto;
+      padding: 9px 20px;
+      background: transparent;
+      border: 1px solid rgba(212, 165, 116, 0.4);
+      border-radius: 8px;
+      color: var(--accent-gold);
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .download-btn:hover {
+      background: rgba(212, 165, 116, 0.12);
+      border-color: var(--accent-gold);
+    }
+
     @media (max-width: 600px) {
       .inbox-btn {
         top: 16px;
@@ -909,6 +929,7 @@
               is definitely something that you contributed to. I wish you all the best and continuous renewal of
               strength from God as you embark to do his work and continue to stay strong in the faith.</p>
             <div class="sign-off">Lots of admiration and gratitude,<br>Justin</div>
+            <button class="download-btn" onclick="downloadNote('evane')">Download note &darr;</button>
           </div>
         </div>
 
@@ -942,6 +963,7 @@
               those moments. You have been an integral part of my university life. Let's just put it that way.</p>
             <p>In whatever you do, I wish that God will guide your path and give you the strength that you need.</p>
             <div class="sign-off">Stop being so sneaky,<br>Justin</div>
+            <button class="download-btn" onclick="downloadNote('elissa')">Download note &darr;</button>
           </div>
         </div>
 
@@ -975,6 +997,7 @@
               is there for you.</p>
             <p>See you around Belle and I hope you get the internship with JP Morgan HAHA.</p>
             <div class="sign-off">Stay cat-like,<br>Justin</div>
+            <button class="download-btn" onclick="downloadNote('bell')">Download note &darr;</button>
           </div>
         </div>
 
@@ -1164,6 +1187,115 @@
         input.focus();
       }
       return false;
+    }
+
+    /* ── DOWNLOAD NOTE AS IMAGE ── */
+    const heroImages = { evane: 'hero-evane.JPG', elissa: 'hero-elissa.jpg', bell: 'hero-bell.jpg' };
+
+    function wrapText(ctx, text, maxWidth) {
+      const words = text.split(' ');
+      const lines = [];
+      let line = '';
+      words.forEach(word => {
+        const test = line ? line + ' ' + word : word;
+        if (line && ctx.measureText(test).width > maxWidth) {
+          lines.push(line);
+          line = word;
+        } else {
+          line = test;
+        }
+      });
+      if (line) lines.push(line);
+      return lines;
+    }
+
+    function stripHtml(html) {
+      const div = document.createElement('div');
+      div.innerHTML = html;
+      return div.textContent.trim();
+    }
+
+    async function downloadNote(name) {
+      const noteEl = document.getElementById('note-' + name);
+      const paragraphs = Array.from(noteEl.querySelectorAll('p')).map(p => p.textContent.trim().replace(/\s+/g, ' '));
+      const signOffLines = noteEl.querySelector('.sign-off').innerHTML.split(/<br\s*\/?>/i).map(html => stripHtml(html).replace(/\s+/g, ' '));
+
+      const W = 900;
+      const PADDING = 60;
+      const PHOTO_H = 460;
+      const bodyFontSize = 24;
+      const lineHeight = 36;
+      const bodyFont = `${bodyFontSize}px Georgia, serif`;
+      const maxTextWidth = W - PADDING * 2;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = W;
+      canvas.height = 100;
+      const ctx = canvas.getContext('2d');
+      ctx.font = bodyFont;
+
+      const allLines = [];
+      paragraphs.forEach(p => {
+        wrapText(ctx, p, maxTextWidth).forEach(l => allLines.push(l));
+        allLines.push('');
+      });
+
+      const textBlockHeight = allLines.length * lineHeight;
+      const signOffHeight = signOffLines.length * lineHeight + 20;
+      const totalHeight = PHOTO_H + PADDING + textBlockHeight + signOffHeight + PADDING;
+
+      canvas.height = totalHeight;
+      const grad = ctx.createLinearGradient(0, 0, 0, totalHeight);
+      grad.addColorStop(0, '#1a1a2e');
+      grad.addColorStop(1, '#0f3460');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, W, totalHeight);
+
+      const img = new Image();
+      await new Promise((resolve, reject) => {
+        img.onload = resolve;
+        img.onerror = reject;
+        img.src = heroImages[name];
+      });
+
+      const scale = Math.max(W / img.width, PHOTO_H / img.height);
+      const sw = W / scale, sh = PHOTO_H / scale;
+      const sx = (img.width - sw) / 2, sy = (img.height - sh) / 2;
+      ctx.drawImage(img, sx, sy, sw, sh, 0, 0, W, PHOTO_H);
+
+      const photoGrad = ctx.createLinearGradient(0, PHOTO_H - 100, 0, PHOTO_H);
+      photoGrad.addColorStop(0, 'rgba(15,52,96,0)');
+      photoGrad.addColorStop(1, 'rgba(15,52,96,1)');
+      ctx.fillStyle = photoGrad;
+      ctx.fillRect(0, PHOTO_H - 100, W, 100);
+
+      ctx.fillStyle = '#f0ece2';
+      ctx.font = bodyFont;
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'top';
+      let y = PHOTO_H + PADDING / 2;
+      allLines.forEach(line => {
+        ctx.fillText(line, PADDING, y);
+        y += lineHeight;
+      });
+
+      ctx.fillStyle = '#d4a574';
+      ctx.font = `italic ${bodyFontSize}px Georgia, serif`;
+      ctx.textAlign = 'right';
+      y += 10;
+      signOffLines.forEach(line => {
+        ctx.fillText(line, W - PADDING, y);
+        y += lineHeight;
+      });
+
+      canvas.toBlob(blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `yoggie-trip-note-${name}.png`;
+        a.click();
+        URL.revokeObjectURL(url);
+      }, 'image/png');
     }
   </script>
 
